@@ -2,7 +2,7 @@ package com.tienda.controller;
 
 import com.tienda.domain.Categoria;
 import com.tienda.service.CategoriaService;
-//import com.tienda.service.FirebaseStorageService;
+import com.tienda.service.FirebaseStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,11 +21,9 @@ public class CategoriaController {
 
     @GetMapping("/listado")
     public String listado(Model model) {
-
         var lista = categoriaService.getCategorias(false);
         model.addAttribute("categorias", lista);
-        model.addAttribute("totalCategorias", lista.size()); // esto es para que salga el numero que existe de categorias
-
+        model.addAttribute("totalCategorias", lista.size());
         return "/categoria/listado";
     }
 
@@ -34,6 +32,9 @@ public class CategoriaController {
         categoriaService.delete(categoria);
         return "redirect:/categoria/listado";
     }
+    
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
 
     @GetMapping("/modificar/{idCategoria}")
     public String modificar(Categoria categoria, Model model) {
@@ -43,8 +44,13 @@ public class CategoriaController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(Categoria categoria,
-            @RequestParam("imagenFile") MultipartFile imagenFile) {
+    public String guardar(Categoria categoria, @RequestParam("imagenFile") MultipartFile imagenFile) {
+        if (!imagenFile.isEmpty()) {
+            //No esta vacio, nos pasan una imagen...
+            categoriaService.save(categoria);
+            String ruta = firebaseStorageService.cargaImagen(imagenFile, "categoria",categoria.getIdCategoria());
+            categoria.setRutaImagen(ruta);
+        }
         categoriaService.save(categoria);
         return "redirect:/categoria/listado";
     }
