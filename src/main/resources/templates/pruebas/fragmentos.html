@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Techshop</title>
+        <meta charset="UTF-8"/>        
+
+    </head>
+    <body>
+        <!-- 1 Sección para mostrar las categorias en tabs-->
+        <section th:fragment="tabs">
+            <div class="row p-3">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/pruebas/listado">
+                            [[#{pruebas.todas}]]</a>
+                    </li>
+                    <li th:each="c : ${categorias}"
+                        class="nav-item">
+                        <a class="nav-link" 
+                           th:href="@{/pruebas/listado/}+${c.idCategoria}">
+                            [[${c.descripcion}]]</a>
+                    </li>
+                </ul>
+            </div>            
+        </section>
+        <!-- 2 Sección para mostrar los productos en tarjetas-->
+        <section th:fragment="tarjetas">
+            <div class="row row-cols-4 p-2">
+                <div th:each="p : ${productos}"
+                     class="card" style="width: 18rem;">
+                    <figure>
+                        <img th:src="${p.rutaImagen}" height="200" class="card-img-top" alt="..."/>
+                        <figcaption class="d-flex justify-content-between">
+                            <span>¢[[${p.precio}]]</span>
+                            <span>([[${p.existencias}]])</span>
+                        </figcaption>
+                    </figure>
+                    <div class="card-body">
+                        <h5 class="card-title">[[${p.descripcion}]]</h5>
+                        <p class="card-text">[[${p.detalle}]]</p>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-cart-arrow-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

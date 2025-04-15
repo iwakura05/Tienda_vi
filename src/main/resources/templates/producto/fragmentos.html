@@ -42,7 +42,9 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label>[[#{producto.categoria}]]</label>
-                                    <input type="number" class="form-control" name="idCategoria" required="true"/>
+                                    <select class="form-select" name="categoria.idCategoria">
+                                        <option th:each="c : ${categorias}" th:value="${c.idCategoria}"> [[${c.descripcion}]]</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label>[[#{producto.descripcion}]]</label>
@@ -50,7 +52,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label>[[#{producto.detalle}]]</label>
-                                    <input type="text" class="form-control" name="detalle"/>
+                                    <textarea class="form-control" rows="3" name="detalle">
+                                    </textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label>[[#{producto.precio}]]</label>
@@ -65,7 +68,7 @@
                                     <input class="form-check-input" type="checkbox" name="activo" id="activo"/>
                                 </div>
                                 <div class="mb-3">
-                                    <label>[[#{producto.rutaImagen}]]</label>
+                                    <label>[[#{producto.imagen}]]</label>
                                     <input class="form-control" type="file" name="imagenFile" onchange="readURL(this);"/>
                                     <img id="blah" src="#" alt="your image" height="200"/>
                                 </div>
@@ -97,22 +100,25 @@
                                         <th>[[#{producto.total}]]</th>
                                         <th>[[#{producto.imagen}]]</th>
                                         <th>[[#{producto.activo}]]</th>
+                                        <th>[[#{producto.categoria}]]</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="c : ${productos}">
-                                        <td>[[${c.idProducto}]]</td>
-                                        <td>[[${c.descripcion}]]</td>
-                                        <td>[[${c.precio}]]</td>
-                                        <td>[[${c.existencias}]]</td>
-                                        <td>[[${c.precio}*${c.existencias}]]</td>
-                                        <td><img th:src="@{${c.rutaImagen}}" alt="no data" height="75"/></td>                                            
-                                        <td th:text="${c.activo} ? 'Activa' : 'Inactiva'" />
-                                        <td><a th:href="@{/producto/eliminar/}+${c.idProducto}"
+                                     <!-- mostrar listado de productos -->
+                                    <tr th:each="p : ${productos}"> 
+                                        <td>[[${p.idProducto}]]</td>
+                                        <td>[[${p.descripcion}]]</td>
+                                        <td>[[${p.precio}]]</td>
+                                        <td>[[${p.existencias}]]</td>
+                                        <td>[[${p.precio}*${p.existencias}]]</td> 
+                                        <td><img th:src="@{${p.rutaImagen}}" alt="no data" height="75"/></td>                                            
+                                        <td th:text="${p.activo} ? 'Activa' : 'Inactiva'" />
+                                        <td>[[${p.categoria.descripcion}]]</td>
+                                        <td><a th:href="@{/producto/eliminar/}+${p.idProducto}"
                                                class="btn btn-danger">
                                                 <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a>
-                                            <a th:href="@{/producto/modificar/}+${c.idProducto}"
+                                            <a th:href="@{/producto/modificar/}+${p.idProducto}"
                                                class="btn btn-success">
                                                 <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]</a>
                                         </td>
@@ -173,10 +179,27 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label for="descripcion">[[#{producto.descripcion}]]</label>
-                                        <input type="text" class="form-control" 
-                                               name="descripcion" th:field="*{descripcion}"
-                                               required="true"/>
+                                        <label>[[#{producto.categoria}]]</label>
+                                        <select class="form-select" th:field="*{categoria.idCategoria}" name="categoria.idCategoria">
+                                            <option th:each="c : ${categorias}" th:value="${c.idCategoria}"> [[${c.descripcion}]]</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>[[#{producto.descripcion}]]</label>
+                                        <input type="text" class="form-control" th:field="*{descripcion}" name="descripcion" required="true"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>[[#{producto.detalle}]]</label>
+                                        <textarea class="form-control" rows="3" th:fielad="*{detalle}" name="detalle">
+                                        </textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>[[#{producto.precio}]]</label>
+                                        <input type="number" class="form-control" th:fielad="*{precio}" name="precio" required="true"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>[[#{producto.existencias}]]</label>
+                                        <input type="number" class="form-control" th:fielad="*{existencias}" name="existencias" required="true"/>
                                     </div>
                                     <div class="mb-3">
                                         <label for="activo">[[#{producto.activo}]]</label>
@@ -187,10 +210,10 @@
                                                th:field="*{activo}"/>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="imagen">[[#{producto.rutaImagen}]]</label>
+                                        <label for="imagen">[[#{producto.imagen}]]</label>
                                         <input class="form-control" type="file" name="imagenFile"
                                                onchange="readURL(this);" />
-                                        <img id="blah" th:src="@{${producto.rutaImagen}}" alt="your image" height="200"/>
+                                        <img id="blah" th:src="@{${producto.rutaImagen}}" alt="your image" height="200"/> // tiene que ser el mismo nombre
                                     </div>
                                 </div>
                             </div>
