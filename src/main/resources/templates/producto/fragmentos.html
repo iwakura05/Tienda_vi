@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:replace="~{layout/plantilla :: head}">
         <title>Techshop</title>
         <meta charset="UTF-8"/>        
@@ -12,7 +13,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">   
-                        <button 
+                        <button
+                            sec:authorize="hasRole('ROLE_ADMIN')" 
                             type="button" 
                             class="btn btn-primary btn-block" 
                             data-bs-toggle="modal" 
@@ -101,22 +103,21 @@
                                         <th>[[#{producto.imagen}]]</th>
                                         <th>[[#{producto.activo}]]</th>
                                         <th>[[#{producto.categoria}]]</th>
-                                        <th></th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" ></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                     <!-- mostrar listado de productos -->
-                                    <tr th:each="p : ${productos}"> 
+                                    <tr th:each="p : ${productos}">
                                         <td>[[${p.idProducto}]]</td>
                                         <td>[[${p.descripcion}]]</td>
                                         <td>[[${p.precio}]]</td>
                                         <td>[[${p.existencias}]]</td>
-                                        <td>[[${p.precio}*${p.existencias}]]</td> 
+                                        <td>[[${p.precio}*${p.existencias}]]</td>
                                         <td><img th:src="@{${p.rutaImagen}}" alt="no data" height="75"/></td>                                            
                                         <td th:text="${p.activo} ? 'Activa' : 'Inactiva'" />
                                         <td>[[${p.categoria.descripcion}]]</td>
-                                        <td><a th:href="@{/producto/eliminar/}+${p.idProducto}"
-                                               class="btn btn-danger">
+                                        <td  sec:authorize="hasRole('ROLE_ADMIN')" ><a th:href="@{/producto/eliminar/}+${p.idProducto}"
+                                                                                       class="btn btn-danger">
                                                 <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a>
                                             <a th:href="@{/producto/modificar/}+${p.idProducto}"
                                                class="btn btn-success">
@@ -213,7 +214,7 @@
                                         <label for="imagen">[[#{producto.imagen}]]</label>
                                         <input class="form-control" type="file" name="imagenFile"
                                                onchange="readURL(this);" />
-                                        <img id="blah" th:src="@{${producto.rutaImagen}}" alt="your image" height="200"/> // tiene que ser el mismo nombre
+                                        <img id="blah" th:src="@{${producto.rutaImagen}}" alt="your image" height="200"/>
                                     </div>
                                 </div>
                             </div>
@@ -224,3 +225,5 @@
         </section>
     </body>
 </html>
+
+

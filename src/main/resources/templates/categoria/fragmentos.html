@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <head th:replace="~{layout/plantilla :: head}">
         <title>Techshop</title>
         <meta charset="UTF-8"/>        
@@ -12,7 +13,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">   
-                        <button 
+                        <button
+                            sec:authorize="hasRole('ROLE_ADMIN')" 
                             type="button" 
                             class="btn btn-primary btn-block" 
                             data-bs-toggle="modal" 
@@ -78,7 +80,7 @@
                                         <th>[[#{categoria.descripcion}]]</th>
                                         <th>[[#{categoria.rutaImagen}]]</th>
                                         <th>[[#{categoria.activo}]]</th>
-                                        <th></th>
+                                        <th sec:authorize="hasRole('ROLE_ADMIN')" ></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -87,7 +89,8 @@
                                         <td>[[${c.descripcion}]]</td>
                                         <td><img th:src="@{${c.rutaImagen}}" alt="no data" height="75"/></td>                                            
                                         <td th:text="${c.activo} ? 'Activa' : 'Inactiva'" />
-                                        <td><a th:href="@{/categoria/eliminar/}+${c.idCategoria}"
+                                        <td  sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <a th:href="@{/categoria/eliminar/}+${c.idCategoria}"
                                                class="btn btn-danger">
                                                 <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a>
                                             <a th:href="@{/categoria/modificar/}+${c.idCategoria}"
