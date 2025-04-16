@@ -35,6 +35,19 @@
                         <figcaption class="d-flex justify-content-between">
                             <span>¢[[${p.precio}]]</span>
                             <span>([[${p.existencias}]])</span>
+                            <form>
+                                <input type='hidden' 
+                                       name='idProducto'
+                                       th:value='${p.idProducto}'/>
+                                <input type='hidden' 
+                                       name='existencias'
+                                       th:value='${p.existencias}'/>
+                                <button type='button'
+                                        onclick='addCart(this.form)'
+                                        class="btn btn-light">
+                                    <i class="fas fa-cart-arrow-down"></i>
+                                </button>
+                            </form>
                         </figcaption>
                     </figure>
                     <div class='card-header'>
@@ -42,21 +55,6 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">[[${p.detalle}]]</p>
-                    </div>
-                    <div class='card-footer'>
-                        <form>
-                            <input type='hidden' 
-                                   name='idProducto'
-                                   th:value='${p.idProducto}'/>
-                            <input type='hidden' 
-                                   name='existencias'
-                                   th:value='${p.existencias}'/>
-                            <button type='button'
-                                    onclick='addCart(this.form)'
-                                    class="btn btn-primary">
-                                <i class="fas fa-cart-arrow-down"></i>
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -178,4 +176,3 @@
 
     </body>
 </html>
-
