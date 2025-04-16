@@ -11,19 +11,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductoService {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private ProductoRepository productoRepositorio;
 
     @Transactional(readOnly = true)
     public List<Producto> getProductos(boolean activos) {
-        var lista = productoRepository.findAll();
-        //aca falta un codigo...
+        var lista = productoRepositorio.findAll();
+        if (activos) {
+            lista.removeIf(e -> !e.isActivo());
+        }
         return lista;
     }
 
     //Se crean los metodos para un CRUD Creat Read Update Delete
     @Transactional(readOnly = true)
     public Producto getProducto(Producto producto) {
-        producto = productoRepository.findById(producto.getIdProducto()).orElse(null);
+        producto = productoRepositorio.findById(producto.getIdProducto()).orElse(null);
 
         return producto;
     }
@@ -31,35 +33,32 @@ public class ProductoService {
     @Transactional
     public void delete(Producto producto) {
         //Elimina el resgistro que tiene producto, basado en el objeto producto
-        productoRepository.delete(producto);
+        productoRepositorio.delete(producto);
     }
 
     @Transactional
     public void save(Producto producto) {
         //Si el idProducto tiene un valor, se actualiza el registro de ese idProducto
         //Si el idProducto no tiene un valor, se inserta un registro con la informacion de esa producto
-        productoRepository.save(producto);
+        productoRepositorio.save(producto);
     }
 
     @Transactional(readOnly = true)
-    public List<Producto> consultaAmpliada(
-        double precioInf,
+    public List<Producto> consultaAmpliada(double precioInf,
         double precioSup) {
-        return productoRepository.findByPrecioBetweenOrderByPrecio(precioInf, precioSup);
+        return productoRepositorio.findByPrecioBetweenOrderByPrecio(precioInf, precioSup);
     }
     
     @Transactional(readOnly = true)
-    public List<Producto> consultaJPQL(
-        double precioInf,
+    public List<Producto> consultaJPQL(double precioInf,
         double precioSup) {
-        return productoRepository.consultaJPQL(precioInf, precioSup);
+        return productoRepositorio.consultaJPQL(precioInf, precioSup);
     }
     
     @Transactional(readOnly = true)
-    public List<Producto> consultaSQL(
-        double precioInf,
+    public List<Producto> consultaSQL(double precioInf,
         double precioSup) {
-        return productoRepository.consultaSQL(precioInf, precioSup);
+        return productoRepositorio.consultaSQL(precioInf, precioSup);
     }
 
 }
